@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import TypeVar, List
 
-from jmetal.component.comparator import DominanceComparator
+from .comparator import DominanceComparator
 
 S = TypeVar('S')
 
@@ -12,7 +12,7 @@ class Ranking(List[S]):
 
     def __init__(self):
         super(Ranking, self).__init__()
-        self.number_of_comparisons = 0
+        # self.number_of_comparisons = 0
         self.ranked_sublists = []
 
     @abstractmethod
@@ -44,10 +44,12 @@ class FastNonDominatedRanking(Ranking[List[S]]):
         # front[i] contains the list of solutions belonging to front i
         front = [[] for _ in range(len(solution_list) + 1)]
 
+        comparator = DominanceComparator()
+
         for p in range(len(solution_list) - 1):
             for q in range(p + 1, len(solution_list)):
-                dominance_test_result = DominanceComparator().compare(solution_list[p], solution_list[q])
-                self.number_of_comparisons += 1
+                dominance_test_result = comparator.compare(solution_list[p], solution_list[q])
+                # self.number_of_comparisons += 1
 
                 if dominance_test_result == -1:
                     ith_dominated[p].append(q)
